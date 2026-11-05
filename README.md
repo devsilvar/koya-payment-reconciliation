@@ -1,8 +1,14 @@
 # Payment reconciliation
 
-`payments.jsonl` is an export of payment events from a payments provider, one JSON object per line. The reconciliation script is meant to work out how much money was actually collected, but it doesn't work.
+`payments.jsonl` is an export of payment events from a payments provider, one JSON object per line. The reconciliation script works out how much money was actually collected and prints a code when the successful-payment count matches `expected.txt`.
 
-Fix it, in Python (`reconcile.py`) or JavaScript (`reconcile.js`), whichever you prefer. When it's right, it prints a code. Paste that code into the application form.
+## What was fixed
+
+- The JavaScript script now reads each payment line, rather than mistakenly treating each line's position as the payment.
+- If a line contains broken JSON, the script skips that unreadable line and continues with the remaining lines. It cannot recover payment details that are missing from a broken line.
+- If a transaction has multiple attempts, only its latest attempt by timestamp is used. It counts as collected only if that attempt succeeded.
+- Amounts with commas, such as `"3,218.81"`, are now read correctly.
+- The script checks its successful-payment count against `expected.txt` before printing the final code.
 
 ## How the data works
 
